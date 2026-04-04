@@ -1,0 +1,268 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Gill Sans MT Pro Greek Font Family */
+@font-face {
+  font-family: "Gill Sans MT Pro";
+  src: url("/fonts/Monotype - GillSansMTProGrk-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gill Sans MT Pro";
+  src: url("/fonts/Monotype - GillSansMTProGrk-LightIt.otf") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gill Sans MT Pro";
+  src: url("/fonts/Monotype - GillSansMTProGrk-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gill Sans MT Pro";
+  src: url("/fonts/Monotype - GillSansMTProGrk-MediumIt.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gill Sans MT Pro";
+  src: url("/fonts/Monotype - GillSansMTProGrk-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gill Sans MT Pro";
+  src: url("/fonts/Monotype - GillSansMTProGrk-BoldIt.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family:
+    "Gill Sans MT Pro",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+}
+
+.react-time-picker__wrapper {
+  height: 2.5rem !important; /* Ύψος του TimePicker */
+  font-size: 1rem !important; /* Μέγεθος γραμματοσειράς */
+  color: #4a5568 !important; /* Χρώμα γραμματοσειράς */
+}
+
+.react-time-picker__inputGroup {
+  display: flex !important; /* Ευθυγράμμιση των πεδίων */
+  align-items: center !important;
+  padding: 0.5rem !important;
+  border: none !important;
+}
+
+.react-time-picker__inputGroup__input {
+  text-align: center !important; /* Κεντραρισμένο κείμενο */
+  width: 3rem !important; /* Αρκετό πλάτος για την εμφάνιση των αριθμών */
+  height: 2rem !important; /* Αύξηση ύψους για καλύτερη ευθυγράμμιση */
+  margin: 0 0.2rem !important; /* Απόσταση ανάμεσα στα κελιά */
+  color: #4a5568 !important; /* Χρώμα γραμματοσειράς */
+  border: 1px solid #e2e8f0 !important; /* Ελαφρύ περίγραμμα */
+  border-radius: 0.25rem !important; /* Στρογγυλεμένες γωνίες */
+}
+
+.react-time-picker__inputGroup__divider {
+  padding: 0 0.5rem !important; /* Αύξηση απόστασης για το διαχωριστικό */
+}
+
+span.react-time-picker__inputGroup__leadingZero {
+  display: none !important; /* Απόκρυψη του μηδενικού */
+}
+
+.animate-blink {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden; /* Κρύβει όλα τα στοιχεία της σελίδας */
+  }
+  .print-container {
+    visibility: visible; /* Εμφανίζει μόνο το print-container */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  .print-hidden {
+    display: none !important; /* Κρύβει τα print-hidden */
+  }
+}
+
+/* DatePicker z-index fix */
+.react-datepicker-popper {
+  z-index: 1000 !important;
+}
+
+.react-datepicker {
+  z-index: 1000 !important;
+}
+
+/* Hide scrollbar for horizontal scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* Smooth animations for online-ordering */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.4s ease-out forwards;
+}
+
+.animate-slide-in-down {
+  animation: slideInDown 0.4s ease-out forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.4s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.4s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.5s ease-out forwards;
+}

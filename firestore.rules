@@ -1,0 +1,163 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ========================================
+    // MENU DATA (synced from Ordio)
+    // ========================================
+    
+    // Products - public read, ordio sync writes
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true; // Ordio sync needs write access
+    }
+
+    // Categories - public read, ordio sync writes
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Recipes (product options/extras)
+    match /recipes/{recipeId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Price Lists
+    match /priceLists/{priceListId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // ========================================
+    // WEBSITE SETTINGS (synced from Ordio)
+    // ========================================
+    
+    // Website settings (hero section, contact info, delivery, payments)
+    match /website_settings/{settingId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    
+    // Website popups and announcements
+    match /website_popups/{popupId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // ========================================
+    // ORDERS (created by customers on website)
+    // ========================================
+    
+    // Orders - anyone can create (checkout), ordio pulls them
+    match /orders/{orderId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true; // Ordio marks syncedToOrdio
+      allow delete: if request.auth != null;
+    }
+
+    // Order tracking (for customer order status page)
+    match /order_tracking/{trackingId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if request.auth != null;
+    }
+
+    // ========================================
+    // CUSTOMERS
+    // ========================================
+    
+    // Customer accounts
+    match /customers/{customerId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if request.auth != null;
+    }
+
+    // Customer sessions
+    match /customer_sessions/{sessionId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if true;
+    }
+
+    // Customer cart data (temporary)
+    match /customer_carts/{cartId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if true;
+    }
+
+    // ========================================
+    // CONTACT & COMMUNICATION
+    // ========================================
+    
+    // Contact form messages
+    match /contact_messages/{messageId} {
+      allow read: if request.auth != null;
+      allow create: if true;
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // Reservations
+    match /reservations/{reservationId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if request.auth != null;
+    }
+
+    // ========================================
+    // PAYMENTS
+    // ========================================
+    
+    // Payment transactions (Viva Wallet, etc.)
+    match /payments/{paymentId} {
+      allow read: if request.auth != null;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if request.auth != null;
+    }
+    
+    // Payment webhooks (from payment providers)
+    match /payment_webhooks/{webhookId} {
+      allow read: if request.auth != null;
+      allow create: if true;
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // ========================================
+    // ANALYTICS & MISC
+    // ========================================
+    
+    // Website analytics
+    match /website_analytics/{analyticsId} {
+      allow read: if request.auth != null;
+      allow create: if true;
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // Config (general website config)
+    match /config/{configId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Users (website auth users)
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+  }
+}
