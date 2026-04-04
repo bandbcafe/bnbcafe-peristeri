@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const config = {
-  basePath: "/peristeri",
   reactStrictMode: true,
   images: {
     domains: ["sweetleaf.gr"],
