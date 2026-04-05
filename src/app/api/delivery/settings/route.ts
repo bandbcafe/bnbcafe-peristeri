@@ -6,6 +6,12 @@ let cachedSettings: any = null;
 let cacheTimestamp: number = 0;
 const CACHE_TTL = 1 * 60 * 1000; // 1 minute
 
+/** Clear the in-memory delivery cache (called after sync/revalidate) */
+export function clearDeliveryCache() {
+  cachedSettings = null;
+  cacheTimestamp = 0;
+}
+
 // GET - Get delivery settings
 export async function GET() {
   // Check cache first

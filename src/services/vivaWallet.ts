@@ -87,7 +87,10 @@ class VivaWalletService {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to get access token: ${response.status} ${response.statusText}`);
+        const errorBody = await response.text();
+        console.error(`[Viva] Token error: ${response.status}`, errorBody);
+        console.error(`[Viva] Mode: ${this.config.testMode ? 'DEMO' : 'PRODUCTION'}, URL: ${this.accountsUrl}`);
+        throw new Error(`Viva auth failed (${response.status}): ${errorBody}`);
       }
 
       const data = await response.json();
@@ -134,7 +137,10 @@ class VivaWalletService {
 
       if (!response.ok) {
         const errorData = await response.text();
-        throw new Error(`Failed to create payment order: ${response.status} ${errorData}`);
+        console.error(`[Viva] Create order failed: ${response.status}`, errorData);
+        console.error(`[Viva] Using ${this.config.testMode ? 'DEMO' : 'PRODUCTION'} mode`);
+        console.error(`[Viva] Source code: ${orderData.sourceCode}`);
+        throw new Error(`Viva ${response.status}: ${errorData}`);
       }
 
       const data = await response.json();

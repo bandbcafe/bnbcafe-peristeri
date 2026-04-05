@@ -4,6 +4,12 @@ let cachedSettings: any = null;
 let cacheTime = 0;
 const CACHE_TTL = 60_000; // 1 minute
 
+/** Clear the in-memory settings cache (called after sync/revalidate) */
+export function clearSettingsCache() {
+  cachedSettings = null;
+  cacheTime = 0;
+}
+
 /**
  * Fetch website settings server-side using firebase-admin.
  * Used by generateMetadata in layout.tsx so Google sees real SEO tags.

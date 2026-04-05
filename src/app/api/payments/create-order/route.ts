@@ -48,18 +48,26 @@ export async function POST(request: NextRequest) {
 
     // Έλεγχος αν το Viva Wallet είναι ενεργοποιημένο
     if (!paymentSettings?.vivaWallet?.enabled) {
+      console.error('[Payment] Viva Wallet not enabled. paymentSettings:', JSON.stringify(paymentSettings, null, 2));
       return NextResponse.json(
-        { error: 'Οι πληρωμές με κάρτα δεν είναι διαθέσιμες' },
+        { error: 'Οι πληρωμές με κάρτα δεν είναι διαθέσιμες (Viva disabled)' },
         { status: 400 }
       );
     }
 
     const vivaConfig = paymentSettings.vivaWallet;
 
+    console.log(`[Payment] Viva config: mode=${vivaConfig.testMode ? 'DEMO' : 'PRODUCTION'}, sourceCode=${vivaConfig.sourceCode}, clientId=${vivaConfig.clientId?.substring(0, 8)}...`);
+
     // Έλεγχος ότι όλα τα απαραίτητα στοιχεία υπάρχουν
     if (!vivaConfig.clientId || !vivaConfig.clientSecret || !vivaConfig.sourceCode) {
+      const missing = [];
+      if (!vivaConfig.clientId) missing.push('clientId');
+      if (!vivaConfig.clientSecret) missing.push('clientSecret');
+      if (!vivaConfig.sourceCode) missing.push('sourceCode');
+      console.error(`[Payment] Missing Viva config: ${missing.join(', ')}`);
       return NextResponse.json(
-        { error: 'Ελλιπής ρύθμιση Viva Wallet' },
+        { error: `Ελλιπής ρύθμιση Viva Wallet: λείπουν ${missing.join(', ')}` },
         { status: 500 }
       );
     }
@@ -157,11 +165,11 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error creating Viva Wallet payment order:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error creating Viva Wallet payment order:', errorMessage);
     return NextResponse.json(
       {
-        error: 'Σφάλμα κατά τη δημιουργία της παραγγελίας πληρωμής',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        error: `Σφάλμα δημιουργίας πληρωμής: ${errorMessage}`,
       },
       { status: 500 }
     );
