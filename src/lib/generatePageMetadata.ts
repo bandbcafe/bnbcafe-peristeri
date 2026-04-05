@@ -60,6 +60,11 @@ export async function generatePageMetadata(
       title: `Online Παραγγελία - ${base}`,
       description: `Παραγγείλτε online από το ${businessName}${city ? ` στην περιοχή ${city}` : ""}. Delivery στην πόρτα σας.`,
     },
+    "/checkout": {
+      key: "checkout",
+      title: `Ολοκλήρωση Παραγγελίας - ${base}`,
+      description: `Ολοκληρώστε την παραγγελία σας από το ${businessName}${city ? ` στην περιοχή ${city}` : ""}.`,
+    },
   };
 
   const page = pageMap[pathname] || {
@@ -75,11 +80,18 @@ export async function generatePageMetadata(
     pageDescriptions?.[page.key as keyof typeof pageDescriptions] ||
     page.description;
 
+  const keywords = seo?.keywords
+    ? seo.keywords
+    : businessName && city
+      ? `${businessName}, ${city}, delivery, online παραγγελία, κρατήσεις τραπεζιού`
+      : "delivery, online παραγγελία";
+
   const canonicalUrl = siteUrl ? `${siteUrl}${pathname}` : undefined;
 
   return {
     title,
     description,
+    keywords,
     alternates: canonicalUrl ? { canonical: canonicalUrl } : undefined,
     openGraph: {
       type: "website",

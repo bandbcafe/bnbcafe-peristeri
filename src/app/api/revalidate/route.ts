@@ -6,7 +6,7 @@ import { clearDeliveryCache } from "@/app/api/delivery/settings/route";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, x-revalidate-secret",
+  "Access-Control-Allow-Headers": "Content-Type, x-revalidate-secret, x-tenant-id",
 };
 
 /** OPTIONS - CORS preflight */
