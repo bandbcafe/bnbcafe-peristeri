@@ -150,6 +150,7 @@ function CheckoutPageContent() {
   const [awaitingOrderId, setAwaitingOrderId] = useState<string | null>(null);
   const [acceptanceStatus, setAcceptanceStatus] = useState<"waiting" | "accepted" | "rejected" | "payment_failed">("waiting");
   const [rejectionReason, setRejectionReason] = useState<string>("");
+  const [paymentErrorMsg, setPaymentErrorMsg] = useState<string>("");
 
   // Address management functions
   const addNewAddress = () => {
@@ -483,7 +484,9 @@ function CheckoutPageContent() {
         toast.error("Η επιλεγμένη μέθοδος πληρωμής δεν είναι διαθέσιμη");
       }
     } catch (error) {
-      toast.error("Σφάλμα κατά την επεξεργασία της πληρωμής");
+      const msg = error instanceof Error ? error.message : "Σφάλμα κατά την επεξεργασία της πληρωμής";
+      console.error("[Checkout] Payment error:", msg);
+      toast.error(msg);
     } finally {
       if (!awaitingAcceptance) {
         setProcessing(false);
@@ -759,7 +762,8 @@ function CheckoutPageContent() {
             });
 
             if (!payResponse.ok) {
-              throw new Error("Σφάλμα δημιουργίας πληρωμής");
+              const errData = await payResponse.json().catch(() => ({}));
+              throw new Error(errData.error || "Σφάλμα δημιουργίας πληρωμής");
             }
 
             const { checkoutUrl, orderCode } = await payResponse.json();
@@ -784,7 +788,9 @@ function CheckoutPageContent() {
             // Redirect to Viva Wallet checkout
             window.location.href = checkoutUrl;
           } catch (payError) {
-            console.error("Error creating payment:", payError);
+            const errMsg = payError instanceof Error ? payError.message : "Σφάλμα πληρωμής";
+            console.error("Error creating payment:", errMsg);
+            setPaymentErrorMsg(errMsg);
             setAcceptanceStatus("payment_failed");
           }
         } else if (status === "cancelled") {
@@ -1008,9 +1014,14 @@ function CheckoutPageContent() {
               <h2 className="text-2xl font-bold text-gray-800 mb-3">
                 Σφάλμα Πληρωμής
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 mb-4">
                 Η παραγγελία εγκρίθηκε αλλά υπήρξε πρόβλημα με τη σελίδα πληρωμής. Παρακαλώ δοκιμάστε ξανά.
               </p>
+              {paymentErrorMsg && (
+                <p className="text-sm text-red-600 bg-red-50 rounded-lg p-3 mb-4">
+                  {paymentErrorMsg}
+                </p>
+              )}
               <button
                 onClick={() => router.push("/checkout")}
                 className="w-full bg-[#C9AC7A] hover:bg-[#9F7D41] text-white px-6 py-3 rounded-lg font-semibold transition-colors"

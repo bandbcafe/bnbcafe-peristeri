@@ -48,9 +48,10 @@ export async function POST(request: NextRequest) {
 
     // Έλεγχος αν το Viva Wallet είναι ενεργοποιημένο
     if (!paymentSettings?.vivaWallet?.enabled) {
-      console.error('[Payment] Viva Wallet not enabled. paymentSettings:', JSON.stringify(paymentSettings, null, 2));
+      console.error('[Payment] Viva Wallet not enabled. paymentSettings keys:', Object.keys(paymentSettings || {}));
+      console.error('[Payment] vivaWallet object:', JSON.stringify(paymentSettings?.vivaWallet, null, 2));
       return NextResponse.json(
-        { error: 'Οι πληρωμές με κάρτα δεν είναι διαθέσιμες (Viva disabled)' },
+        { error: 'Οι πληρωμές με κάρτα δεν είναι διαθέσιμες. Ενεργοποιήστε το Viva Wallet στις ρυθμίσεις και κάντε Sync.' },
         { status: 400 }
       );
     }
@@ -166,10 +167,22 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error creating Viva Wallet payment order:', errorMessage);
+    console.error('[Payment] Error creating Viva payment order:', errorMessage);
+
+    // Parse Viva-specific errors for better user feedback
+    let userMessage = 'Σφάλμα δημιουργίας πληρωμής';
+    if (errorMessage.includes('Viva auth failed')) {
+      userMessage = 'Σφάλμα αυθεντικοποίησης Viva Wallet. Ελέγξτε τα Client ID/Secret στις ρυθμίσεις.';
+    } else if (errorMessage.includes('Viva 400')) {
+      userMessage = 'Η Viva απέρριψε το αίτημα. Ελέγξτε το Source Code και τις ρυθμίσεις στο Viva Dashboard.';
+    } else if (errorMessage.includes('Viva 401') || errorMessage.includes('Viva 403')) {
+      userMessage = 'Δεν έχετε πρόσβαση στο Viva API. Ελέγξτε τα credentials.';
+    }
+
     return NextResponse.json(
       {
-        error: `Σφάλμα δημιουργίας πληρωμής: ${errorMessage}`,
+        error: userMessage,
+        details: errorMessage,
       },
       { status: 500 }
     );
